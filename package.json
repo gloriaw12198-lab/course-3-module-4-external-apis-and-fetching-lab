@@ -11,7 +11,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "You’ve just joined the front-end development team of a national safety awareness \r organization in the US. Your first assignment is to build a web application that \r fetches weather alerts from the National Weather Service API for a specific U.S. \r state. The app should dynamically display relevant alert headlines and handle edge \r cases like invalid input and network errors.",
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@testing-library/dom": "^10.4.1",
@@ -22,5 +22,16 @@
   },
   "dependencies": {
     "jest-environment-jsdom": "^30.0.5"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gloriaw12198-lab/course-3-module-4-external-apis-and-fetching-lab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gloriaw12198-lab/course-3-module-4-external-apis-and-fetching-lab/issues"
+  },
+  "homepage": "https://github.com/gloriaw12198-lab/course-3-module-4-external-apis-and-fetching-lab#readme"
 }
