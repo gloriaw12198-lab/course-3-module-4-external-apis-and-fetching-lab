@@ -15,9 +15,11 @@
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^5.17.0",
     "eslint": "^9.8.0",
     "globals": "^15.8.0",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "jest-environment-jsdom": "^26.6.2"
   },
   "directories": {
     "test": "test"
@@ -29,9 +31,5 @@
   "bugs": {
     "url": "https://github.com/gloriaw12198-lab/course-3-module-4-external-apis-and-fetching-lab/issues"
   },
-  "homepage": "https://github.com/gloriaw12198-lab/course-3-module-4-external-apis-and-fetching-lab#readme",
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "jest-environment-jsdom": "^26.6.2"
-  }
+  "homepage": "https://github.com/gloriaw12198-lab/course-3-module-4-external-apis-and-fetching-lab#readme"
 }
