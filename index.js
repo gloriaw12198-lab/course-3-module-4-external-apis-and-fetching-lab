@@ -1,122 +1,73 @@
-const weatherApi = "https://api.weather.gov/alerts/active?area=";
+const API_URL = "https://api.weather.gov/alerts/active?area=";
 
 // -----------------------------
-// Safe DOM references (prevents Jest crashes)
+// DOM elements
 // -----------------------------
-let input, button, resultsTitle, alertsList, errorMessage;
-
-if (typeof document !== "undefined") {
-  input = document.getElementById("state-input");
-  button = document.getElementById("fetch-alerts");
-  alertsList = document.getElementById("alerts-display");
-  errorMessage = document.getElementById("error-message");
-
-  resultsTitle = document.createElement("h2");
-  document.body.insertBefore(resultsTitle, alertsList);
-}
+const input = document.getElementById("state-input");
+const button = document.getElementById("fetch-alerts");
+const alertsDisplay = document.getElementById("alerts-display");
+const errorMessage = document.getElementById("error-message");
 
 // -----------------------------
-// 1. Fetch Weather Data
+// Fetch Weather Alerts
 // -----------------------------
 async function fetchWeatherData(state) {
-  if (!state) {
-    throw new Error("State is required");
-  }
-
-  const response = await fetch(weatherApi + state);
+  const response = await fetch(`${API_URL}${state}`);
 
   if (!response.ok) {
-    throw new Error("Failed to fetch weather data");
+    throw new Error("Network failure");
   }
 
-  return await response.json();
+  return response.json();
 }
 
 // -----------------------------
-// 2. Display Weather Data
+// Display Weather
 // -----------------------------
-function displayWeather(data, state) {
-  if (errorMessage) {
-    errorMessage.textContent = "";
-    errorMessage.style.display = "none";
-  }
+function displayWeather(data) {
+  const features = data.features || [];
 
-  if (alertsList) alertsList.innerHTML = "";
-
-  const alerts = data.features || [];
-
-  if (resultsTitle) {
-    resultsTitle.textContent =
-      `Current watches, warnings, and advisories for ${state}: ${alerts.length}`;
-  }
-
-  if (alerts.length === 0 && alertsList) {
-    alertsList.innerHTML = "<p>No active alerts found.</p>";
-    return;
-  }
-
-  alerts.forEach(alert => {
-    const div = document.createElement("div");
-    div.textContent =
-      alert.properties?.headline || "No headline available";
-    alertsList.appendChild(div);
-  });
+  alertsDisplay.innerHTML = `
+    <h2>Weather Alerts: ${features.length}</h2>
+    <ul>
+      ${features.map(a => `<li>${a.properties.headline}</li>`).join("")}
+    </ul>
+  `;
 }
 
 // -----------------------------
-// 3. Display Error
+// Display Error
 // -----------------------------
 function displayError(message) {
-  if (resultsTitle) resultsTitle.textContent = "";
-  if (alertsList) alertsList.innerHTML = "";
-
-  if (errorMessage) {
-    errorMessage.style.display = "block";
-    errorMessage.textContent = message;
-  }
+  errorMessage.classList.remove("hidden");
+  errorMessage.textContent = message;
 }
 
 // -----------------------------
-// 4. Clear UI
+// Clear Input
 // -----------------------------
-function clearUI() {
-  if (resultsTitle) resultsTitle.textContent = "";
-  if (alertsList) alertsList.innerHTML = "";
+function clearInput() {
+  input.value = "";
+}
 
-  if (errorMessage) {
+// -----------------------------
+// Button Handler
+// -----------------------------
+button.addEventListener("click", async () => {
+  const state = input.value.trim().toUpperCase();
+
+  clearInput();
+
+  try {
+    const data = await fetchWeatherData(state);
+
+    displayWeather(data);
+
+    // clear error on success (TEST REQUIREMENT)
     errorMessage.textContent = "";
-    errorMessage.style.display = "none";
+    errorMessage.classList.add("hidden");
+
+  } catch (error) {
+    displayError(error.message);
   }
-}
-
-// -----------------------------
-// 5. Button Click Handler
-// -----------------------------
-if (typeof document !== "undefined") {
-  button.addEventListener("click", async () => {
-    const state = input.value.trim();
-
-    clearUI();
-
-    try {
-      const data = await fetchWeatherData(state);
-      displayWeather(data, state);
-    } catch (err) {
-      displayError(err.message);
-    }
-
-    input.value = "";
-  });
-}
-
-// -----------------------------
-// Export for Jest
-// -----------------------------
-if (typeof module !== "undefined") {
-  module.exports = {
-    fetchWeatherData,
-    displayWeather,
-    displayError,
-    clearUI
-  };
-}
+});
